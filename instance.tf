@@ -36,6 +36,7 @@ resource "aws_instance" "public" {
   }
 }
 
+
 resource "aws_security_group" "private" {
 
   name   = "${var.env_code}-private-sec"
