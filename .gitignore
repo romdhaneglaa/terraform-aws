@@ -1,0 +1,6 @@
+*.tfstate
+*.xml
+.idea/*
+*.hcl
+*.backup
+.terraform
