@@ -2,7 +2,7 @@
 resource "aws_security_group" "public" {
 
   name   = "${var.env_code}-public-sec"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
 
   ingress {
     from_port   = 22
@@ -37,8 +37,8 @@ resource "aws_instance" "public" {
   associate_public_ip_address = true
   key_name                    = "public_key_ec2"
   vpc_security_group_ids      = [aws_security_group.public.id]
-  subnet_id                   = aws_subnet.public_subnet[0].id
-  user_data =  file("user-data.sh")
+  subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet
+  user_data                   = file("user-data.sh")
   tags = {
     Name = "${var.env_code}-public"
   }
@@ -48,13 +48,13 @@ resource "aws_instance" "public" {
 resource "aws_security_group" "private" {
 
   name   = "${var.env_code}-private-sec"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.vpc_cidr}"]
+    cidr_blocks = [data.terraform_remote_state.level1.outputs.vpc_cidr]
   }
 
   egress {
@@ -75,7 +75,7 @@ resource "aws_instance" "private" {
   associate_public_ip_address = true
   key_name                    = "public_key_ec2"
   vpc_security_group_ids      = [aws_security_group.private.id]
-  subnet_id                   = aws_subnet.private_subnet[0].id
+  subnet_id                   = data.terraform_remote_state.level1.outputs.private_subnet
   tags = {
     Name = "${var.env_code}-private"
   }
