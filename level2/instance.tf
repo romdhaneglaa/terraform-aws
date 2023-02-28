@@ -29,24 +29,10 @@ resource "aws_security_group" "public" {
 
 }
 
-
-#resource "aws_instance" "public" {
-#  ami                         = data.aws_ami.amazonlinux.id
-#  instance_type               = "t3.micro"
-#  associate_public_ip_address = true
-#  key_name                    = "public_key_ec2"
-#  vpc_security_group_ids      = [aws_security_group.public.id]
-#  subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet
-#  user_data                   = file("user-data.sh")
-#  tags = {
-#    Name = "${var.env_code}-public"
-#  }
-#}
 resource "aws_instance" "private" {
   count = 2
   ami                         = data.aws_ami.amazonlinux.id
   instance_type               = "t3.micro"
-#  associate_public_ip_address = true
   key_name                    = "public_key_ec2"
   vpc_security_group_ids      = [aws_security_group.private.id]
   subnet_id                   = data.terraform_remote_state.level1.outputs.private_subnet[count.index]
@@ -88,16 +74,3 @@ resource "aws_security_group" "private" {
   }
 }
 
-
-#resource "aws_instance" "private" {
-#  ami                         = data.aws_ami.amazonlinux.id
-#  instance_type               = "t3.micro"
-#  associate_public_ip_address = true
-#  key_name                    = "public_key_ec2"
-#  vpc_security_group_ids      = [aws_security_group.private.id]
-#  subnet_id                   = data.terraform_remote_state.level1.outputs.private_subnet
-#  tags = {
-#    Name = "${var.env_code}-private"
-#  }
-#
-#}
