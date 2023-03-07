@@ -47,20 +47,20 @@ resource "aws_alb_target_group" "group" {
 
 
   health_check {
-    enabled = true
-    path = "/"
-    port = 80
-    healthy_threshold = 2
+    enabled             = true
+    path                = "/"
+    port                = 80
+    healthy_threshold   = 2
     unhealthy_threshold = 2
-    timeout = 2
-    interval = 5
-    matcher = 200
+    timeout             = 2
+    interval            = 5
+    matcher             = 200
   }
 }
 
 resource "aws_lb_target_group_attachment" "lb_attachment" {
-#  for_each = toset(aws_instance.private[*].id)
-  count = 2
+  #  for_each = toset(aws_instance.private[*].id)
+  count            = 2
   target_group_arn = aws_alb_target_group.group.arn
   target_id        = aws_instance.private[count.index].id
   port             = 80
@@ -68,11 +68,11 @@ resource "aws_lb_target_group_attachment" "lb_attachment" {
 
 resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.lb_app.arn
-  port = 80
-  protocol = "HTTP"
+  port              = 80
+  protocol          = "HTTP"
 
   default_action {
-    type = "forward"
+    type             = "forward"
     target_group_arn = aws_alb_target_group.group.arn
 
   }
