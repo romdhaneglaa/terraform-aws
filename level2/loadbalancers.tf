@@ -59,7 +59,6 @@ resource "aws_alb_target_group" "group" {
 }
 
 resource "aws_lb_target_group_attachment" "lb_attachment" {
-  #  for_each = toset(aws_instance.private[*].id)
   count            = 2
   target_group_arn = aws_alb_target_group.group.arn
   target_id        = aws_instance.private[count.index].id
