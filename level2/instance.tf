@@ -1,20 +1,3 @@
-
-resource "aws_instance" "private" {
-  count                  = 2
-  ami                    = data.aws_ami.amazonlinux.id
-  instance_type          = "t3.micro"
-  key_name               = "public_key_ec2"
-  vpc_security_group_ids = [aws_security_group.private.id]
-  subnet_id              = data.terraform_remote_state.level1.outputs.private_subnet[count.index]
-  user_data              = file("user-data.sh")
-  tags = {
-    Name = "${var.env_code}-private-${count.index}"
-  }
-}
-
-
-
-
 resource "aws_security_group" "private" {
 
   name   = "${var.env_code}-private-sec"
