@@ -5,12 +5,13 @@ resource "aws_launch_configuration" "main" {
   key_name        = "public_key_ec2"
   user_data       = file("user-data.sh")
   security_groups = [aws_security_group.private.id]
+  iam_instance_profile = aws_iam_instance_profile.main.name
 }
 
 resource "aws_autoscaling_group" "main" {
   name                 = var.env_code
-  min_size             = 2
-  desired_capacity     = 2
+  min_size             = 1
+  desired_capacity     = 1
   max_size             = 4
   target_group_arns    = [aws_alb_target_group.group.arn]
   launch_configuration = aws_launch_configuration.main.name
