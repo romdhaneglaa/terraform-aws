@@ -42,5 +42,5 @@ resource "aws_iam_role_policy_attachment" "main" {
 resource "aws_iam_instance_profile" "main" {
   name = var.env_code
   role = aws_iam_role.main.name
-
+  
 }

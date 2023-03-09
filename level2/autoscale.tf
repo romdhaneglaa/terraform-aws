@@ -5,6 +5,7 @@ resource "aws_launch_configuration" "main" {
   key_name        = "public_key_ec2"
   user_data       = file("user-data.sh")
   security_groups = [aws_security_group.private.id]
+  iam_instance_profile = aws_iam_instance_profile.main.name
 }
 
 resource "aws_autoscaling_group" "main" {
