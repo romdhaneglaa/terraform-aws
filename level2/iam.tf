@@ -1,22 +1,5 @@
-resource "aws_iam_policy" "main" {
-  name = "${var.env_code}s3_access"
-  policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Sid": "ListObjectsInBucket",
-        "Effect": "Allow",
-        "Action": "s3:*",
-        "Resource": "*"
-      }
-    ]
-  })
-
-
-
-}
-
 resource "aws_iam_role" "main" {
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"]
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -32,11 +15,6 @@ resource "aws_iam_role" "main" {
   })
 
   name = "${var.env_code}"
-}
-
-resource "aws_iam_role_policy_attachment" "main" {
-  policy_arn         = aws_iam_policy.main.arn
-  role               = aws_iam_role.main.name
 }
 
 resource "aws_iam_instance_profile" "main" {
