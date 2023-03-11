@@ -12,9 +12,9 @@ resource "aws_autoscaling_group" "main" {
   min_size             = 1
   desired_capacity     = 1
   max_size             = 4
-  target_group_arns    = [aws_alb_target_group.group.arn]
+  target_group_arns    = [var.target_group_arns]
   launch_configuration = aws_launch_configuration.main.name
-  vpc_zone_identifier  = data.terraform_remote_state.level1.outputs.private_subnet
+  vpc_zone_identifier  = var.aws_autoscaling_group_subnet_id
 
   tag {
     key                 = "Name"
@@ -22,3 +22,27 @@ resource "aws_autoscaling_group" "main" {
     value               = var.env_code
   }
 }
+resource "aws_security_group" "private" {
+
+  name   = "${var.env_code}-private-sec"
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [var.lb_security_groups]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "${var.env_code}-private"
+  }
+}
+
+

@@ -3,13 +3,13 @@ resource "aws_lb" "lb_app" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sec_gpe.id]
-  subnets            = data.terraform_remote_state.level1.outputs.public_subnet
+  subnets            = var.lb_subnets
 }
 
 resource "aws_security_group" "lb_sec_gpe" {
 
   name   = "${var.env_code}-loadbalacer"
-  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -36,7 +36,7 @@ resource "aws_alb_target_group" "group" {
   name     = "terraform-alb-target"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = data.terraform_remote_state.level1.outputs.vpc_id
+  vpc_id   = var.vpc_id
 
   health_check {
     enabled             = true
