@@ -12,8 +12,8 @@ resource "aws_security_group" "lb_sec_gpe" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -38,6 +38,7 @@ resource "aws_alb_target_group" "group" {
   protocol = "HTTP"
   vpc_id   = var.vpc_id
 
+
   health_check {
     enabled             = true
     path                = "/"
@@ -52,9 +53,10 @@ resource "aws_alb_target_group" "group" {
 
 resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.lb_app.arn
-  port              = 80
-  protocol          = "HTTP"
-
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn = var.certificate
+  ssl_policy = "ELBSecurityPolicy-2016-08"
   default_action {
     type             = "forward"
     target_group_arn = aws_alb_target_group.group.arn
