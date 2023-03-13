@@ -15,7 +15,6 @@ resource "aws_security_group" "this" {
     to_port   = 3306
     protocol  = "tcp"
     security_groups = [var.secutiry_group]
-#    cidr_blocks = ["0.0.0.0/0"]
   }
 tags = {
   Name = "${var.env_code}"
